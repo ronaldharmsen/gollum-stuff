@@ -1,0 +1,28 @@
+name: Export Wiki to PDF
+
+on:
+  gollum:
+
+jobs:
+  export-wiki-to-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout wiki
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Convert wiki to PDF
+        run: |
+          pandoc *.md -o wiki.pdf
+        working-directory: .
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-pdf
+          path: wiki.pdf
