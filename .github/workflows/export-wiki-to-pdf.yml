@@ -7,11 +7,18 @@ jobs:
   export-wiki-to-pdf:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout wiki
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}.wiki
           token: ${{ secrets.GITHUB_TOKEN }}
+          path: wiki
+
+      - name: Checkout main repo (for script)
+        uses: actions/checkout@v4
+        with:
+          path: main-repo
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -32,16 +39,19 @@ jobs:
       - name: Install TeX Live
         run: sudo apt-get install -y texlive
 
+
       - name: Process Mermaid diagrams
-        run: python3 ./process_mermaid.py
+        run: python3 ../main-repo/process_mermaid.py
+        working-directory: wiki
+
 
       - name: Convert wiki to PDF
-        run: |
-          pandoc *.md -o wiki.pdf
-        working-directory: .
+        run: pandoc *.md -o wiki.pdf
+        working-directory: wiki
+
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: wiki-pdf
-          path: wiki.pdf
+          path: wiki/wiki.pdf
