@@ -14,11 +14,28 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
 
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Install Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install Pandoc
         run: sudo apt-get update && sudo apt-get install -y pandoc
 
       - name: Install TeX Live
         run: sudo apt-get install -y texlive
+
+      - name: Process Mermaid diagrams
+        run: python3 process_mermaid.py
 
       - name: Convert wiki to PDF
         run: |
