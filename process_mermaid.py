@@ -26,7 +26,7 @@ def process_markdown_file(md_path):
         with open('tmp.mmd', 'w', encoding='utf-8') as tmp:
             tmp.write(mermaid_code)
         # Generate SVG with mmdc
-        subprocess.run(['mmdc', '-i', 'tmp.mmd', '-o', img_path], check=True)
+        subprocess.run(['mmdc', '-i', 'tmp.mmd', '-o', img_path, '--no-sandbox'], check=True)
         # Replace code block with image link
         new_content = new_content.replace(match.group(0), f'![Mermaid diagram]({img_filename})')
     # Remove temp file
